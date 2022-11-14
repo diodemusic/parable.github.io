@@ -61,6 +61,10 @@ h1 {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 45%;
 }
 
     .glass-text-area:hover {

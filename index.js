@@ -9,7 +9,7 @@ function parableEncrypt() {
         var encrypted = CryptoJS.AES.encrypt(userInput, key).toString();
         document.getElementById("encryptTextField").value = encrypted;
 
-    } else { document.getElementById("encryptTextField").value = "No text was given"; }
+    } else { document.getElementById("encryptTextField").value = ""; }
 }
 
 function parableDecrypt() {
@@ -24,7 +24,7 @@ function parableDecrypt() {
         var decrypted = bytes.toString(CryptoJS.enc.Utf8);
         document.getElementById("decryptTextField").value = decrypted;
 
-    } else { document.getElementById("decryptTextField").value = "No text was given"; }
+    } else { document.getElementById("decryptTextField").value = ""; }
 }
 
 var button = document.getElementById("encryptButton");
