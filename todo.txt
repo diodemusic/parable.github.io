@@ -1,0 +1,2 @@
+- add copy and paste from clipboard buttons
+- make text area sizes responsive
