@@ -4,7 +4,7 @@
 function parableEncrypt() {
 
     var CryptoJS = require("crypto-js");
-    var key = "sfdgNYRT4gn64J%^nm^&nm4Bh345n46ncvbCVbcVb24£5634#46n64N64H£gnv42w'fvl";
+    var key = document.getElementById("passphraseTextField").value;
     var userInput = document.getElementById("encryptTextField").value;
 
     if (userInput) {
@@ -18,7 +18,7 @@ function parableEncrypt() {
 function parableDecrypt() {
 
     var CryptoJS = require("crypto-js");
-    var key = "sfdgNYRT4gn64J%^nm^&nm4Bh345n46ncvbCVbcVb24£5634#46n64N64H£gnv42w'fvl";
+    var key = document.getElementById("passphraseTextField").value;
     var userInput = document.getElementById("decryptTextField").value;
 
     if (userInput) {
@@ -32,25 +32,9 @@ function parableDecrypt() {
 
 function copyEncryptedText() {
 
-    var Copy = require("copy-to-clipboard");
+    var copy = require("copy-to-clipboard");
     var copyText = document.getElementById("encryptTextField");
-
-    copyText.select();
-    copyText.setSelectionRange(0, 99999); // For mobile devices
-
-    Copy(copyText.value);
-
-}
-
-function copyDecryptedText() {
-    
-    var Copy = require("copy-to-clipboard");
-    var copyText = document.getElementById("decryptTextField");
-
-    copyText.select();
-    copyText.setSelectionRange(0, 99999); // For mobile devices
-
-    Copy(copyText.value);
+    copy(copyText.value);
 
 }
 
@@ -63,9 +47,6 @@ button.addEventListener("click", parableDecrypt);
 
 var button = document.getElementById("encryptCopyButton");
 button.addEventListener("click", copyEncryptedText);
-
-var button = document.getElementById("decryptCopyButton");
-button.addEventListener("click", copyDecryptedText);
 
 },{"copy-to-clipboard":3,"crypto-js":13}],3:[function(require,module,exports){
 "use strict";

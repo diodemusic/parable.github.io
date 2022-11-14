@@ -18,13 +18,18 @@ body {
     background-attachment: fixed;
 }
 
+.passphrase-wrapper {
+    width: 100%;
+}
+
+
 .encrypt-wrapper {
     width: 100%;
 }
 
 .decrypt-wrapper {
     width: 100%;
-    padding-top: 4%;
+    padding-top: 2%;
 }
 
 h1 {
@@ -62,7 +67,7 @@ h1 {
 }
 
 .glass-button:active {
-    background-color: rgba(255,255,255,0.3);
+    background-color: rgba(50,100,50,0.3);
 }
 
 .glass-text-area {
@@ -87,5 +92,31 @@ h1 {
 }
 
     .glass-text-area:hover {
+        background-color: rgba(255,255,255,0.2);
+}
+
+.glass-passphrase-text-area {
+    resize: none;
+    font-family: "Courier New", monospace;
+    padding: 14px 22px;
+    border: 0;
+    text-decoration: none;
+    background-color: rgba(100,100,100,0.1);
+    backdrop-filter: blur(30px);
+    color: rgba(173, 239, 209, 0.8);
+    font-size: 16px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 40%;
+}
+
+    .glass-passphrase-text-area:hover {
         background-color: rgba(255,255,255,0.2);
 }
