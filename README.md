@@ -1,3 +1,3 @@
-# https://diodemusic.github.io/parable.github.io/
+# diodemusic.github.io
 
-Parable Encryption Website :)
+Parable Encryption :)
