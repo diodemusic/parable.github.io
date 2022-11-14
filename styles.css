@@ -1,0 +1,64 @@
+body {
+    background-color: black;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    margin-top: 1px;
+}
+
+h1 {
+    color: rgba(152, 222, 222);
+    font-family: "Courier New", monospace;
+    font-size: 85px;
+    font-weight: 100;
+    line-height: 120px;
+    margin: 0 auto;
+    text-align: center;
+    width: 60%;
+    padding: 10px;
+    display: inline;
+}
+
+.glass-button {
+    display: inline-block;
+    font-family: "Courier New", monospace;
+    padding: 14px 22px;
+    border: 0;
+    text-decoration: none;
+    border-radius: 15px;
+    background-color: rgba(100,100,100,0.1);
+    backdrop-filter: blur(30px);
+    color: rgba(152, 222, 222, 0.8);
+    font-size: 16px;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+ 
+    .glass-button:hover {
+        background-color: rgba(255,255,255,0.2);
+}
+
+.glass-text-area {
+    resize: none;
+    display: inline-block;
+    font-family: "Courier New", monospace;
+    padding: 14px 22px;
+    border: 0;
+    text-decoration: none;
+    background-color: rgba(100,100,100,0.1);
+    backdrop-filter: blur(30px);
+    color: rgba(152, 222, 222, 0.8);
+    font-size: 16px;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+ 
+    .glass-text-area:hover {
+        background-color: rgba(255,255,255,0.2);
+}
