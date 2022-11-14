@@ -65,33 +65,6 @@ h1 {
     background-color: rgba(255,255,255,0.3);
 }
 
-.glass-copy-button {
-    font-family: "Courier New", monospace;
-    padding: 14px 22px;
-    border: 0;
-    text-decoration: none;
-    border-radius: 15px;
-    background-color: rgba(100,100,100,0.1);
-    backdrop-filter: blur(30px);
-    color: rgba(173, 239, 209, 0.8);
-    font-size: 18px;
-    letter-spacing: 2px;
-    cursor: pointer;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-    .glass-copy-button:hover {
-        background-color: rgba(255,255,255,0.2);
-    }
-
-    .glass-copy-button:active {
-        background-color: rgba(255,255,255,0.3);
-    }
-
 .glass-text-area {
     resize: none;
     font-family: "Courier New", monospace;
