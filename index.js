@@ -6,8 +6,12 @@ function parableEncrypt() {
 
     if (userInput) {
 
-        var encrypted = CryptoJS.AES.encrypt(userInput, key).toString();
-        document.getElementById("encryptTextField").value = encrypted;
+        if (key !== "change me" && key !== "") {
+
+            var encrypted = CryptoJS.AES.encrypt(userInput, key).toString();
+            document.getElementById("encryptTextField").value = encrypted;
+        
+            } else document.getElementById("encryptTextField").value = "Please change the encryption key";
 
     } else { document.getElementById("encryptTextField").value = ""; }
 }
@@ -20,9 +24,13 @@ function parableDecrypt() {
 
     if (userInput) {
 
+        if (key !== "change me" && key !== "") {
+
         var bytes = CryptoJS.AES.decrypt(userInput, key);
         var decrypted = bytes.toString(CryptoJS.enc.Utf8);
         document.getElementById("decryptTextField").value = decrypted;
+
+        } else document.getElementById("encryptTextField").value = "Please change the encryption key";
 
     } else { document.getElementById("decryptTextField").value = ""; }
 }

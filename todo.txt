@@ -2,5 +2,5 @@
 - add copy and paste from clipboard buttons 🟢
 - make text area sizes responsive 🟢
 - stretch background for mobile scrolling 🟢
-- add custom passphrase 🔴
+- add custom passphrase 🟢
 - find waldo 🔴

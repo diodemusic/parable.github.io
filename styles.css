@@ -16,12 +16,26 @@ body {
     animation: gradient 15s ease infinite;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    margin: 0;
+}
+
+h1 {
+    color: rgb(173, 239, 209);
+    font-family: "Courier New", monospace;
+    font-size: 70px;
+    font-weight: 100;
+    line-height: 120px;
+    margin: 0;
+    padding: 0px 0px 0px;
+    text-align: center;
 }
 
 .passphrase-wrapper {
     width: 100%;
+    text-align: center;
+    padding-top: 1%;
+    padding-bottom: 0.1%;
 }
-
 
 .encrypt-wrapper {
     width: 100%;
@@ -29,17 +43,18 @@ body {
 
 .decrypt-wrapper {
     width: 100%;
-    padding-top: 2%;
+    padding-top: 0.1%;
 }
 
-h1 {
+.passphrase-label-wrapper {
     color: rgb(173, 239, 209);
     font-family: "Courier New", monospace;
-    font-size: 85px;
-    font-weight: 100;
-    line-height: 120px;
+    font-size: 18px;
+    font-weight: 20;
+    line-height: 20px;
     margin: 0 auto;
     padding: 2px 8px 8px;
+    padding-bottom: 0.1%;
     text-align: center;
 }
 
@@ -98,7 +113,7 @@ h1 {
 .glass-passphrase-text-area {
     resize: none;
     font-family: "Courier New", monospace;
-    padding: 14px 22px;
+    padding: 20px 14px 22px;
     border: 0;
     text-decoration: none;
     background-color: rgba(100,100,100,0.1);
