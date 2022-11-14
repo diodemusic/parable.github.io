@@ -6,22 +6,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Parable</title>
         <link rel="stylesheet" href="styles.css">
-        <link rel="icon" href="images/lock.ico"/>
+        <link rel="icon" href="images/padlock.ico"/>
     </head>
 
     <body>
-        <div class="wrapper">
             <h1>Parable</h1>
 
+        <div class="encrypt-wrapper">
             <textarea id="encryptTextField" class="glass-text-area" rows="9" cols="30"></textarea>
             <button id="encryptButton" class="glass-button">ENCRYPT</button>
+            <button id="encryptCopyButton" class="glass-copy-button">📋</button>
+        </div>
 
-            <br>
-            <br>
-            <br>
-
+        <div class="decrypt-wrapper">
             <textarea id="decryptTextField" class="glass-text-area" rows="9" cols="30"></textarea>
             <button id="decryptButton" class="glass-button">DECRYPT</button>
+            <button id="decryptCopyButton" class="glass-copy-button">📋</button>
         </div>
 
         <script src="bundle.js"></script>

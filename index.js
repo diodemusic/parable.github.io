@@ -27,8 +27,41 @@ function parableDecrypt() {
     } else { document.getElementById("decryptTextField").value = ""; }
 }
 
+function copyEncryptedText() {
+
+    var Copy = require("copy-to-clipboard");
+    var copyText = document.getElementById("encryptTextField");
+
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); // For mobile devices
+
+    Copy(copyText.value);
+
+}
+
+function copyDecryptedText() {
+    
+    var Copy = require("copy-to-clipboard");
+    var copyText = document.getElementById("decryptTextField");
+
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); // For mobile devices
+
+    Copy(copyText.value);
+
+    copyText.se
+
+}
+
 var button = document.getElementById("encryptButton");
 button.addEventListener("click", parableEncrypt);
 
 var button = document.getElementById("decryptButton");
 button.addEventListener("click", parableDecrypt);
+
+
+var button = document.getElementById("encryptCopyButton");
+button.addEventListener("click", copyEncryptedText);
+
+var button = document.getElementById("decryptCopyButton");
+button.addEventListener("click", copyDecryptedText);

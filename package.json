@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "copy-to-clipboard": "^3.3.3",
     "crypto-js": "^4.1.1"
   }
 }

@@ -30,13 +30,161 @@ function parableDecrypt() {
     } else { document.getElementById("decryptTextField").value = ""; }
 }
 
+function copyEncryptedText() {
+
+    var Copy = require("copy-to-clipboard");
+    var copyText = document.getElementById("encryptTextField");
+
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); // For mobile devices
+
+    Copy(copyText.value);
+
+}
+
+function copyDecryptedText() {
+    
+    var Copy = require("copy-to-clipboard");
+    var copyText = document.getElementById("decryptTextField");
+
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); // For mobile devices
+
+    Copy(copyText.value);
+
+}
+
 var button = document.getElementById("encryptButton");
 button.addEventListener("click", parableEncrypt);
 
 var button = document.getElementById("decryptButton");
 button.addEventListener("click", parableDecrypt);
 
-},{"crypto-js":12}],3:[function(require,module,exports){
+
+var button = document.getElementById("encryptCopyButton");
+button.addEventListener("click", copyEncryptedText);
+
+var button = document.getElementById("decryptCopyButton");
+button.addEventListener("click", copyDecryptedText);
+
+},{"copy-to-clipboard":3,"crypto-js":13}],3:[function(require,module,exports){
+"use strict";
+
+var deselectCurrent = require("toggle-selection");
+
+var clipboardToIE11Formatting = {
+  "text/plain": "Text",
+  "text/html": "Url",
+  "default": "Text"
+}
+
+var defaultMessage = "Copy to clipboard: #{key}, Enter";
+
+function format(message) {
+  var copyKey = (/mac os x/i.test(navigator.userAgent) ? "⌘" : "Ctrl") + "+C";
+  return message.replace(/#{\s*key\s*}/g, copyKey);
+}
+
+function copy(text, options) {
+  var debug,
+    message,
+    reselectPrevious,
+    range,
+    selection,
+    mark,
+    success = false;
+  if (!options) {
+    options = {};
+  }
+  debug = options.debug || false;
+  try {
+    reselectPrevious = deselectCurrent();
+
+    range = document.createRange();
+    selection = document.getSelection();
+
+    mark = document.createElement("span");
+    mark.textContent = text;
+    // avoid screen readers from reading out loud the text
+    mark.ariaHidden = "true"
+    // reset user styles for span element
+    mark.style.all = "unset";
+    // prevents scrolling to the end of the page
+    mark.style.position = "fixed";
+    mark.style.top = 0;
+    mark.style.clip = "rect(0, 0, 0, 0)";
+    // used to preserve spaces and line breaks
+    mark.style.whiteSpace = "pre";
+    // do not inherit user-select (it may be `none`)
+    mark.style.webkitUserSelect = "text";
+    mark.style.MozUserSelect = "text";
+    mark.style.msUserSelect = "text";
+    mark.style.userSelect = "text";
+    mark.addEventListener("copy", function(e) {
+      e.stopPropagation();
+      if (options.format) {
+        e.preventDefault();
+        if (typeof e.clipboardData === "undefined") { // IE 11
+          debug && console.warn("unable to use e.clipboardData");
+          debug && console.warn("trying IE specific stuff");
+          window.clipboardData.clearData();
+          var format = clipboardToIE11Formatting[options.format] || clipboardToIE11Formatting["default"]
+          window.clipboardData.setData(format, text);
+        } else { // all other browsers
+          e.clipboardData.clearData();
+          e.clipboardData.setData(options.format, text);
+        }
+      }
+      if (options.onCopy) {
+        e.preventDefault();
+        options.onCopy(e.clipboardData);
+      }
+    });
+
+    document.body.appendChild(mark);
+
+    range.selectNodeContents(mark);
+    selection.addRange(range);
+
+    var successful = document.execCommand("copy");
+    if (!successful) {
+      throw new Error("copy command was unsuccessful");
+    }
+    success = true;
+  } catch (err) {
+    debug && console.error("unable to copy using execCommand: ", err);
+    debug && console.warn("trying IE specific stuff");
+    try {
+      window.clipboardData.setData(options.format || "text", text);
+      options.onCopy && options.onCopy(window.clipboardData);
+      success = true;
+    } catch (err) {
+      debug && console.error("unable to copy using clipboardData: ", err);
+      debug && console.error("falling back to prompt");
+      message = format("message" in options ? options.message : defaultMessage);
+      window.prompt(message, text);
+    }
+  } finally {
+    if (selection) {
+      if (typeof selection.removeRange == "function") {
+        selection.removeRange(range);
+      } else {
+        selection.removeAllRanges();
+      }
+    }
+
+    if (mark) {
+      document.body.removeChild(mark);
+    }
+    reselectPrevious();
+  }
+
+  return success;
+}
+
+module.exports = copy;
+
+},{"toggle-selection":39}],4:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -271,7 +419,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.AES;
 
 }));
-},{"./cipher-core":4,"./core":5,"./enc-base64":6,"./evpkdf":9,"./md5":14}],4:[function(require,module,exports){
+},{"./cipher-core":5,"./core":6,"./enc-base64":7,"./evpkdf":10,"./md5":15}],5:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -1162,7 +1310,7 @@ button.addEventListener("click", parableDecrypt);
 
 
 }));
-},{"./core":5,"./evpkdf":9}],5:[function(require,module,exports){
+},{"./core":6,"./evpkdf":10}],6:[function(require,module,exports){
 (function (global){(function (){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
@@ -1972,7 +2120,7 @@ button.addEventListener("click", parableDecrypt);
 
 }));
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"crypto":1}],6:[function(require,module,exports){
+},{"crypto":1}],7:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -2109,7 +2257,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.enc.Base64;
 
 }));
-},{"./core":5}],7:[function(require,module,exports){
+},{"./core":6}],8:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -2250,7 +2398,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.enc.Base64url;
 
 }));
-},{"./core":5}],8:[function(require,module,exports){
+},{"./core":6}],9:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -2400,7 +2548,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.enc.Utf16;
 
 }));
-},{"./core":5}],9:[function(require,module,exports){
+},{"./core":6}],10:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -2535,7 +2683,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.EvpKDF;
 
 }));
-},{"./core":5,"./hmac":11,"./sha1":30}],10:[function(require,module,exports){
+},{"./core":6,"./hmac":12,"./sha1":31}],11:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -2602,7 +2750,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.format.Hex;
 
 }));
-},{"./cipher-core":4,"./core":5}],11:[function(require,module,exports){
+},{"./cipher-core":5,"./core":6}],12:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -2746,7 +2894,7 @@ button.addEventListener("click", parableDecrypt);
 
 
 }));
-},{"./core":5}],12:[function(require,module,exports){
+},{"./core":6}],13:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -2765,7 +2913,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS;
 
 }));
-},{"./aes":3,"./cipher-core":4,"./core":5,"./enc-base64":6,"./enc-base64url":7,"./enc-utf16":8,"./evpkdf":9,"./format-hex":10,"./hmac":11,"./lib-typedarrays":13,"./md5":14,"./mode-cfb":15,"./mode-ctr":17,"./mode-ctr-gladman":16,"./mode-ecb":18,"./mode-ofb":19,"./pad-ansix923":20,"./pad-iso10126":21,"./pad-iso97971":22,"./pad-nopadding":23,"./pad-zeropadding":24,"./pbkdf2":25,"./rabbit":27,"./rabbit-legacy":26,"./rc4":28,"./ripemd160":29,"./sha1":30,"./sha224":31,"./sha256":32,"./sha3":33,"./sha384":34,"./sha512":35,"./tripledes":36,"./x64-core":37}],13:[function(require,module,exports){
+},{"./aes":4,"./cipher-core":5,"./core":6,"./enc-base64":7,"./enc-base64url":8,"./enc-utf16":9,"./evpkdf":10,"./format-hex":11,"./hmac":12,"./lib-typedarrays":14,"./md5":15,"./mode-cfb":16,"./mode-ctr":18,"./mode-ctr-gladman":17,"./mode-ecb":19,"./mode-ofb":20,"./pad-ansix923":21,"./pad-iso10126":22,"./pad-iso97971":23,"./pad-nopadding":24,"./pad-zeropadding":25,"./pbkdf2":26,"./rabbit":28,"./rabbit-legacy":27,"./rc4":29,"./ripemd160":30,"./sha1":31,"./sha224":32,"./sha256":33,"./sha3":34,"./sha384":35,"./sha512":36,"./tripledes":37,"./x64-core":38}],14:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -2842,7 +2990,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.lib.WordArray;
 
 }));
-},{"./core":5}],14:[function(require,module,exports){
+},{"./core":6}],15:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -3111,7 +3259,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.MD5;
 
 }));
-},{"./core":5}],15:[function(require,module,exports){
+},{"./core":6}],16:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -3192,7 +3340,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.mode.CFB;
 
 }));
-},{"./cipher-core":4,"./core":5}],16:[function(require,module,exports){
+},{"./cipher-core":5,"./core":6}],17:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -3309,7 +3457,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.mode.CTRGladman;
 
 }));
-},{"./cipher-core":4,"./core":5}],17:[function(require,module,exports){
+},{"./cipher-core":5,"./core":6}],18:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -3368,7 +3516,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.mode.CTR;
 
 }));
-},{"./cipher-core":4,"./core":5}],18:[function(require,module,exports){
+},{"./cipher-core":5,"./core":6}],19:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -3409,7 +3557,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.mode.ECB;
 
 }));
-},{"./cipher-core":4,"./core":5}],19:[function(require,module,exports){
+},{"./cipher-core":5,"./core":6}],20:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -3464,7 +3612,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.mode.OFB;
 
 }));
-},{"./cipher-core":4,"./core":5}],20:[function(require,module,exports){
+},{"./cipher-core":5,"./core":6}],21:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -3514,7 +3662,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.pad.Ansix923;
 
 }));
-},{"./cipher-core":4,"./core":5}],21:[function(require,module,exports){
+},{"./cipher-core":5,"./core":6}],22:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -3559,7 +3707,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.pad.Iso10126;
 
 }));
-},{"./cipher-core":4,"./core":5}],22:[function(require,module,exports){
+},{"./cipher-core":5,"./core":6}],23:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -3600,7 +3748,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.pad.Iso97971;
 
 }));
-},{"./cipher-core":4,"./core":5}],23:[function(require,module,exports){
+},{"./cipher-core":5,"./core":6}],24:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -3631,7 +3779,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.pad.NoPadding;
 
 }));
-},{"./cipher-core":4,"./core":5}],24:[function(require,module,exports){
+},{"./cipher-core":5,"./core":6}],25:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -3679,7 +3827,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.pad.ZeroPadding;
 
 }));
-},{"./cipher-core":4,"./core":5}],25:[function(require,module,exports){
+},{"./cipher-core":5,"./core":6}],26:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -3825,7 +3973,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.PBKDF2;
 
 }));
-},{"./core":5,"./hmac":11,"./sha1":30}],26:[function(require,module,exports){
+},{"./core":6,"./hmac":12,"./sha1":31}],27:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -4016,7 +4164,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.RabbitLegacy;
 
 }));
-},{"./cipher-core":4,"./core":5,"./enc-base64":6,"./evpkdf":9,"./md5":14}],27:[function(require,module,exports){
+},{"./cipher-core":5,"./core":6,"./enc-base64":7,"./evpkdf":10,"./md5":15}],28:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -4209,7 +4357,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.Rabbit;
 
 }));
-},{"./cipher-core":4,"./core":5,"./enc-base64":6,"./evpkdf":9,"./md5":14}],28:[function(require,module,exports){
+},{"./cipher-core":5,"./core":6,"./enc-base64":7,"./evpkdf":10,"./md5":15}],29:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -4349,7 +4497,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.RC4;
 
 }));
-},{"./cipher-core":4,"./core":5,"./enc-base64":6,"./evpkdf":9,"./md5":14}],29:[function(require,module,exports){
+},{"./cipher-core":5,"./core":6,"./enc-base64":7,"./evpkdf":10,"./md5":15}],30:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -4617,7 +4765,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.RIPEMD160;
 
 }));
-},{"./core":5}],30:[function(require,module,exports){
+},{"./core":6}],31:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -4768,7 +4916,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.SHA1;
 
 }));
-},{"./core":5}],31:[function(require,module,exports){
+},{"./core":6}],32:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -4849,7 +4997,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.SHA224;
 
 }));
-},{"./core":5,"./sha256":32}],32:[function(require,module,exports){
+},{"./core":6,"./sha256":33}],33:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -5049,7 +5197,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.SHA256;
 
 }));
-},{"./core":5}],33:[function(require,module,exports){
+},{"./core":6}],34:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -5376,7 +5524,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.SHA3;
 
 }));
-},{"./core":5,"./x64-core":37}],34:[function(require,module,exports){
+},{"./core":6,"./x64-core":38}],35:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -5460,7 +5608,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.SHA384;
 
 }));
-},{"./core":5,"./sha512":35,"./x64-core":37}],35:[function(require,module,exports){
+},{"./core":6,"./sha512":36,"./x64-core":38}],36:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -5787,7 +5935,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.SHA512;
 
 }));
-},{"./core":5,"./x64-core":37}],36:[function(require,module,exports){
+},{"./core":6,"./x64-core":38}],37:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6567,7 +6715,7 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS.TripleDES;
 
 }));
-},{"./cipher-core":4,"./core":5,"./enc-base64":6,"./evpkdf":9,"./md5":14}],37:[function(require,module,exports){
+},{"./cipher-core":5,"./core":6,"./enc-base64":7,"./evpkdf":10,"./md5":15}],38:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6872,4 +7020,45 @@ button.addEventListener("click", parableDecrypt);
 	return CryptoJS;
 
 }));
-},{"./core":5}]},{},[2]);
+},{"./core":6}],39:[function(require,module,exports){
+
+module.exports = function () {
+  var selection = document.getSelection();
+  if (!selection.rangeCount) {
+    return function () {};
+  }
+  var active = document.activeElement;
+
+  var ranges = [];
+  for (var i = 0; i < selection.rangeCount; i++) {
+    ranges.push(selection.getRangeAt(i));
+  }
+
+  switch (active.tagName.toUpperCase()) { // .toUpperCase handles XHTML
+    case 'INPUT':
+    case 'TEXTAREA':
+      active.blur();
+      break;
+
+    default:
+      active = null;
+      break;
+  }
+
+  selection.removeAllRanges();
+  return function () {
+    selection.type === 'Caret' &&
+    selection.removeAllRanges();
+
+    if (!selection.rangeCount) {
+      ranges.forEach(function(range) {
+        selection.addRange(range);
+      });
+    }
+
+    active &&
+    active.focus();
+  };
+};
+
+},{}]},{},[2]);
